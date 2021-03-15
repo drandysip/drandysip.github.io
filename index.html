@@ -22,23 +22,19 @@
 <body>
  
 
-    <main role="main" class="pb-3" style="padding: 0px !important">
-        <div class="space-70"></div>
-        <div class="container-fluid" style="padding:20px; min-height:100vh">
-            <a-scene inspector keyboard-shortcuts screenshot vr-mode-ui>
-                <a-entity id="rig"
-                  movement-controls
-                  position="25 0 25">
-                    <a-entity camera
-                        position="0 1.6 0"
-                        look-controls="pointerLockEnabled: true">
-                    </a-entity>
-                </a-entity>
-                <a-sky color="#003" radius="10000"></a-sky>
-                <a-entity id="fg" forcegraph="node-label: name; node-auto-color-by: compositelineage; link-directional-arrow-length: 1.5; link-directional-arrow-rel-pos: 1;"></a-entity>
-            </a-scene>
-        </div>
-    </main>
+    <a-scene inspector keyboard-shortcuts screenshot vr-mode-ui>
+        <a-entity id="rig"
+            movement-controls
+            position="25 0 25">
+            <a-entity camera
+                position="0 1.6 0"
+                look-controls="pointerLockEnabled: true">
+            </a-entity>
+        </a-entity>
+        <a-sky color="#003" radius="10000"></a-sky>
+        <a-entity id="fg" forcegraph="node-label: name; node-auto-color-by: compositelineage; link-directional-arrow-length: 1.5; link-directional-arrow-rel-pos: 1;"></a-entity>
+    </a-scene>
+ 
 
 
     <script
