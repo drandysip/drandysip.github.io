@@ -66,8 +66,6 @@
 
             if (apiKey !== null)
                 graph = graphql(url + "/graphql", { headers: { "Authorization": "Basic " + apiKey } });
-            else if (key !== null && key !== "")
-                graph = graphql(url + "/graphql", { headers: { "Authorization": "Basic " + key } });
             var realkgraphdata = graph('query kgd($model: String!){getRealVRKGDisplay(graphName: $model){nodes{ id label lineage sublineage externalId compositelineage} links{  id label source target}}}');
             var data = await realkgraphdata({ model: mdname });
             var fg = document.querySelector('#fg');
