@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Thinkbase VR Demo</title>
+    <style>
+
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: auto;
+            width: 100%;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-forcegraph-component/dist/aframe-forcegraph-component.min.js"></script>
+    <script src="https://unpkg.com/super-hands/dist/super-hands.min.js"></script>
+    
+</head>
+<body>
+ 
+
+    <main role="main" class="pb-3" style="padding: 0px !important">
+        <div class="space-70"></div>
+        <div class="container-fluid" style="padding:20px; min-height:100vh">
+            <a-scene inspector keyboard-shortcuts screenshot vr-mode-ui>
+                <a-camera wasd-controls="fly: true; acceleration: 600" capture-mouse super-hands raycaster="objects: .sphere" cursor="rayOrigin:mouse">
+                </a-camera>
+                <a-sky color="#003" radius="10000"></a-sky>
+                <a-entity id="fg" forcegraph="node-label: name; node-auto-color-by: compositelineage; link-directional-arrow-length: 1.5; link-directional-arrow-rel-pos: 1;"></a-entity>
+            </a-scene>
+        </div>
+        <div id='kgurl' data-kgurl="@RouteData.Values["kgraph"]"></div>
+    </main>
+
+
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/graphql.js/graphql.min.js"></script>
+
+    <script>
+        var settingsStorageName = 'thinkbase-settings';
+
+        $(async function () {
+            var url = "https://darl.dev";
+            var graph = graphql(url + "/graphql");
+            var apiKey = findGetParameter("apikey");
+            if ($('#kgurl').data('kgurl')) {
+                mdname = $('#kgurl').data('kgurl');
+            }
+            else {
+                mdname = findGetParameter("kgraph");
+            }
+            if (!mdname)
+                mdname = "primary_math.graph";
+
+            if (apiKey !== null)
+                graph = graphql(url + "/graphql", { headers: { "Authorization": "Basic " + apiKey } });
+            else if (key !== null && key !== "")
+                graph = graphql(url + "/graphql", { headers: { "Authorization": "Basic " + key } });
+            var realkgraphdata = graph('query kgd($model: String!){getRealVRKGDisplay(graphName: $model){nodes{ id label lineage sublineage externalId compositelineage} links{  id label source target}}}');
+            var data = await realkgraphdata({ model: mdname });
+            var fg = document.querySelector('#fg');
+            fg.setAttribute('forcegraph', { nodes: data.getRealVRKGDisplay.nodes, links: data.getRealVRKGDisplay.links });
+        });
+
+        function findGetParameter(parameterName) {
+            var result = null,
+                tmp = [];
+            location.search
+                .substr(1)
+                .split("&")
+                .forEach(function (item) {
+                    tmp = item.split("=");
+                    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+        }
+
+    </script>
+
+</body>
+</html>
