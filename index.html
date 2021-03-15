@@ -32,7 +32,6 @@
                 <a-entity id="fg" forcegraph="node-label: name; node-auto-color-by: compositelineage; link-directional-arrow-length: 1.5; link-directional-arrow-rel-pos: 1;"></a-entity>
             </a-scene>
         </div>
-        <div id='kgurl' data-kgurl="@RouteData.Values["kgraph"]"></div>
     </main>
 
 
@@ -55,15 +54,9 @@
             var url = "https://darl.dev";
             var graph = graphql(url + "/graphql");
             var apiKey = findGetParameter("apikey");
-            if ($('#kgurl').data('kgurl')) {
-                mdname = $('#kgurl').data('kgurl');
-            }
-            else {
-                mdname = findGetParameter("kgraph");
-            }
+            var mdname = findGetParameter("kgraph");
             if (!mdname)
                 mdname = "primary_math.graph";
-
             if (apiKey !== null)
                 graph = graphql(url + "/graphql", { headers: { "Authorization": "Basic " + apiKey } });
             var realkgraphdata = graph('query kgd($model: String!){getRealVRKGDisplay(graphName: $model){nodes{ id label lineage sublineage externalId compositelineage} links{  id label source target}}}');
